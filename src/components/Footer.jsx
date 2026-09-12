@@ -26,7 +26,7 @@ const APP_DOWNLOADS = [
   {
     label: 'App Store',
     subtitle: 'Download on the',
-    href: 'https://apps.apple.com/app/id6808960783',
+    href: 'https://apps.apple.com/us/app/brayton-church/id6808960783',
     kind: 'app-store',
   },
 ]
