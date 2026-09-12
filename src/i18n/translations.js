@@ -155,6 +155,9 @@ export const translations = {
     contactFormMessage: 'How can we help?',
     contactFormSubmit: 'Send Message',
     contactFormSuccess: 'Thank you \u2014 we\u2019ll be in touch soon.',
+    contactFormNameRequired: 'Name is required',
+    contactFormEmailRequired: 'Email or phone number is required',
+    contactFormMessageRequired: 'Message is required',
 
     // Footer
     footerAbout:
@@ -320,10 +323,13 @@ export const translations = {
     contactEmailLabel: 'အီးမေးလ်',
     contactEmail: 'hello@braytonchurch.org',
     contactFormName: 'သင့်အမည်',
-    contactFormEmail: 'သင့်အီးမေးလ်',
+    contactFormEmail: 'အီးမေးလ် သို့မဟုတ် ဖုန်းနံပါတ်',
     contactFormMessage: 'ကျွန်ုပ်တို့ မည်သို့ကူညီပေးရမလဲ?',
     contactFormSubmit: 'စာပို့ရန်',
     contactFormSuccess: 'ကျေးဇူးတင်ပါသည် — မကြာမီ ဆက်သွယ်ပါမည်။',
+    contactFormNameRequired: 'အမည် ထည့်သွင်းရန် လိုအပ်ပါသည်',
+    contactFormEmailRequired: 'အီးမေးလ် သို့မဟုတ် ဖုန်းနံပါတ် ထည့်သွင်းရန် လိုအပ်ပါသည်',
+    contactFormMessageRequired: 'မက်ဆေ့ခ်ျ ထည့်သွင်းရန် လိုအပ်ပါသည်',
 
     // Footer
     footerAbout:

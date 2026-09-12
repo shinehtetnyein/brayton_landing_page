@@ -10,36 +10,40 @@ export default function ContactForm() {
   const { t } = useLanguage();
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
-
-   // Fetch events on mount or when language context changes
-    // useEffect(() => {
-    //   let isMounted = true
-    //   async function loadPostContactMessage() {
-    //     try {
-    //       const data = await fetchPostContactMessage()
-    //       if (isMounted) setContact(data);
-    //     } catch {
-    //       // Handled gracefully inside fetchPostContactMessage
-    //     }
-    //   }
-  
-    //   loadPostContactMessage();
-    //   return () => {
-    //     isMounted = false
-    //   }
-    // }, [])
+  const [errors, setErrors] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setForm((f) => ({ ...f, [name]: value }));
+    if (errors[name]) {
+      setErrors((prev) => ({ ...prev, [name]: "" }));
+    }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.message) return;
+
+    const newErrors = {};
+    if (!form.name.trim()) {
+      newErrors.name = t("contactFormNameRequired");
+    }
+    if (!form.email.trim()) {
+      newErrors.email = t("contactFormEmailRequired");
+    }
+    if (!form.message.trim()) {
+      newErrors.message = t("contactFormMessageRequired");
+    }
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
+
+    setErrors({});
     setSubmitted(true);
+    fetchPostContactMessage(form);
     setForm(initialForm);
-    fetchPostContactMessage(form)
+    setTimeout(() => setSubmitted(false), 6000);
   };
 
   const infoItems = [
@@ -129,10 +133,19 @@ export default function ContactForm() {
                 placeholder={t("contactFormName")}
                 value={form.name}
                 onChange={handleChange}
-                required
-                className="w-full px-4 py-3.5 rounded-lg border border-church-border bg-church-bg text-church-ink text-[15px] focus:outline-none focus:border-church-cta focus:ring-1 focus:ring-church-cta transition-colors placeholder:text-church-ink-muted/60"
+                className={`w-full px-4 py-3.5 rounded-lg border bg-church-bg text-church-ink text-[15px] focus:outline-none transition-colors placeholder:text-church-ink-muted/60 ${
+                  errors.name
+                    ? "border-rose-500 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                    : "border-church-border focus:border-church-cta focus:ring-1 focus:ring-church-cta"
+                }`}
               />
+              {errors.name && (
+                <p className="mt-1.5 text-xs text-rose-500 font-medium">
+                  {errors.name}
+                </p>
+              )}
             </div>
+
             <div>
               <label htmlFor="email" className="sr-only">
                 {t("contactFormEmail")}
@@ -140,14 +153,23 @@ export default function ContactForm() {
               <input
                 id="email"
                 name="email"
-                type="email"
+                type="text"
                 placeholder={t("contactFormEmail")}
                 value={form.email}
                 onChange={handleChange}
-                required
-                className="w-full px-4 py-3.5 rounded-lg border border-church-border bg-church-bg text-church-ink text-[15px] focus:outline-none focus:border-church-cta focus:ring-1 focus:ring-church-cta transition-colors placeholder:text-church-ink-muted/60"
+                className={`w-full px-4 py-3.5 rounded-lg border bg-church-bg text-church-ink text-[15px] focus:outline-none transition-colors placeholder:text-church-ink-muted/60 ${
+                  errors.email
+                    ? "border-rose-500 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                    : "border-church-border focus:border-church-cta focus:ring-1 focus:ring-church-cta"
+                }`}
               />
+              {errors.email && (
+                <p className="mt-1.5 text-xs text-rose-500 font-medium">
+                  {errors.email}
+                </p>
+              )}
             </div>
+
             <div>
               <label htmlFor="message" className="sr-only">
                 {t("contactFormMessage")}
@@ -159,9 +181,17 @@ export default function ContactForm() {
                 placeholder={t("contactFormMessage")}
                 value={form.message}
                 onChange={handleChange}
-                required
-                className="w-full px-4 py-3.5 rounded-lg border border-church-border bg-church-bg text-church-ink text-[15px] focus:outline-none focus:border-church-cta focus:ring-1 focus:ring-church-cta transition-colors placeholder:text-church-ink-muted/60 resize-y"
+                className={`w-full px-4 py-3.5 rounded-lg border bg-church-bg text-church-ink text-[15px] focus:outline-none transition-colors placeholder:text-church-ink-muted/60 resize-y ${
+                  errors.message
+                    ? "border-rose-500 focus:border-rose-500 focus:ring-1 focus:ring-rose-500"
+                    : "border-church-border focus:border-church-cta focus:ring-1 focus:ring-church-cta"
+                }`}
               />
+              {errors.message && (
+                <p className="mt-1.5 text-xs text-rose-500 font-medium">
+                  {errors.message}
+                </p>
+              )}
             </div>
 
             <button
