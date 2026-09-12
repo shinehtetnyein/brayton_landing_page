@@ -1,25 +1,57 @@
-import { useState } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { motion } from 'framer-motion'
-import { ArrowRight, Calendar } from 'lucide-react'
+import { ArrowRight, Calendar, Sparkles } from 'lucide-react'
 import { useLanguage } from '../context/LanguageContext.jsx'
 import EventDetails from './EventDetails.jsx'
+import {
+  fetchEvents,
+  normalizeEvent,
+  DEFAULT_API_EVENTS,
+} from '../services/eventService.js'
 
 export default function Events() {
-  const { t } = useLanguage()
-  const [selectedEventId, setSelectedEventId] = useState(1)
+  const { t, lang } = useLanguage()
+  const [eventsData, setEventsData] = useState(DEFAULT_API_EVENTS)
+  const [selectedEventId, setSelectedEventId] = useState(
+    DEFAULT_API_EVENTS[0]?.id || 'seed-event-brayton-1'
+  )
+  const [isLoading, setIsLoading] = useState(false)
 
-  const events = [1, 2, 3, 4].map((n) => ({
-    id: n,
-    date: t(`event${n}Date`),
-    title: t(`event${n}Title`),
-    desc: t(`event${n}Desc`),
-    image: [
-      'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1511632765486-a01980e01a18?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1507692049790-de58290a4334?auto=format&fit=crop&w=900&q=80',
-      'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=900&q=80',
-    ][n - 1],
-  }))
+  // Fetch events on mount or when language context changes
+  useEffect(() => {
+    let isMounted = true
+    async function loadEvents() {
+      try {
+        setIsLoading(true)
+        const data = await fetchEvents()
+        if (isMounted && data && data.length > 0) {
+          setEventsData(data)
+          // Keep current selection if valid, otherwise pick first
+          setSelectedEventId((prev) =>
+            data.some((e) => String(e.id) === String(prev)) ? prev : data[0].id
+          )
+        }
+      } catch {
+        // Handled gracefully inside fetchEvents
+      } finally {
+        if (isMounted) setIsLoading(false)
+      }
+    }
+
+    loadEvents()
+    return () => {
+      isMounted = false
+    }
+  }, [])
+
+  // Localized events mapped through service
+  const events = useMemo(() => {
+    const list =
+      Array.isArray(eventsData) && eventsData.length > 0
+        ? eventsData
+        : DEFAULT_API_EVENTS
+    return list.map((ev) => normalizeEvent(ev, lang))
+  }, [eventsData, lang])
 
   const handleViewDetails = (eventId) => {
     setSelectedEventId(eventId)
@@ -41,7 +73,7 @@ export default function Events() {
 
   return (
     <>
-      <section id="events" className="py-5 relative bg-church-bg-alt scroll-mt-20">
+      <section id="events" className="py-8 lg:py-12 relative bg-church-bg-alt scroll-mt-20">
         <div className="max-w-[1180px] mx-auto px-5 sm:px-7">
           <div className="max-w-[640px] mb-8">
             <span className="inline-flex items-center gap-2.5 font-body text-xs font-bold tracking-[0.14em] uppercase text-church-accent before:content-[''] before:w-5.5 before:h-[1.5px] before:bg-church-accent">
@@ -57,7 +89,7 @@ export default function Events() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {events.map((ev, i) => {
-              const isSelected = selectedEventId === ev.id
+              const isSelected = String(selectedEventId) === String(ev.id)
               return (
                 <motion.article
                   key={ev.id}
@@ -74,8 +106,13 @@ export default function Events() {
                   <div className="relative overflow-hidden group">
                     <img
                       className="w-full h-48 object-cover block bg-church-bg-alt transition-transform duration-500 group-hover:scale-105"
-                      src={ev.image}
+                      src={ev.coverImageUrl}
                       alt={ev.title}
+                      loading="lazy"
+                      onError={(e) => {
+                        e.currentTarget.src =
+                          'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=900&q=80'
+                      }}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
                       <button
@@ -88,10 +125,10 @@ export default function Events() {
                     </div>
                   </div>
 
-                  <div className="mt-4 mx-5 flex items-center justify-between gap-2">
+                  <div className="mt-4 mx-5 flex flex-wrap items-center justify-between gap-2">
                     <span className="inline-flex items-center gap-1.5 text-xs font-bold tracking-wider text-church-cta-text bg-church-cta px-3 py-1 rounded-full">
                       <Calendar size={12} />
-                      {ev.date}
+                      {ev.badgeDate}
                     </span>
 
                     {isSelected && (
@@ -101,11 +138,20 @@ export default function Events() {
                     )}
                   </div>
 
-                  <h3 className="mt-3 mx-5 font-display font-semibold text-lg text-church-ink leading-snug">
+                  {ev.theme && (
+                    <div className="mt-2.5 mx-5">
+                      <span className="inline-flex items-center gap-1 text-[11px] font-medium text-church-accent bg-church-accent-tint/50 px-2 py-0.5 rounded-md truncate max-w-full">
+                        <Sparkles size={11} className="shrink-0" />
+                        <span className="truncate">{ev.theme}</span>
+                      </span>
+                    </div>
+                  )}
+
+                  <h3 className="mt-2.5 mx-5 font-display font-semibold text-lg text-church-ink leading-snug">
                     {ev.title}
                   </h3>
-                  <p className="mt-2 mx-5 mb-4 text-sm leading-relaxed text-church-ink-muted">
-                    {ev.desc}
+                  <p className="mt-2 mx-5 mb-4 text-sm leading-relaxed text-church-ink-muted line-clamp-3">
+                    {ev.description}
                   </p>
 
                   <div className="mt-auto mx-5 mb-5 pt-3 border-t border-church-border/50">
@@ -136,9 +182,11 @@ export default function Events() {
       {/* Connected Details Section */}
       <EventDetails
         selectedId={selectedEventId}
+        events={events}
         onSelectEvent={(id) => setSelectedEventId(id)}
         onBackToEvents={handleBackToEvents}
       />
     </>
   )
 }
+

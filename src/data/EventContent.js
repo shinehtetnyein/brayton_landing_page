@@ -649,11 +649,20 @@ export const eventsContent = eventsContentEn
 
 /**
  * Helper to retrieve rich event details localized by current language
- * @param {number|string} id - Event ID (1, 2, 3, 4)
+ * @param {number|string} id - Event ID (1, 2, 3, 4, 'seed-event-brayton-1', etc.)
  * @param {string} lang - Language code ('en' | 'my')
  */
 export function getEventContent(id, lang = 'en') {
-  const numericId = Number(id)
   const pool = lang === 'my' ? eventsContentMy : eventsContentEn
-  return pool[numericId] || eventsContentEn[numericId] || eventsContent[numericId] || null
+  const numericId = Number(id)
+  if (!isNaN(numericId) && pool[numericId]) {
+    return pool[numericId]
+  }
+
+  // Check if it's the seed event
+  if (String(id).includes('seed-event-brayton-1') || String(id) === '1') {
+    return pool[1] || eventsContentEn[1]
+  }
+
+  return pool[1] || eventsContentEn[1] || null
 }

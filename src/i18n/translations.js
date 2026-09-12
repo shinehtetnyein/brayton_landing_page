@@ -151,7 +151,7 @@ export const translations = {
     contactEmailLabel: 'Email',
     contactEmail: 'hello@braytonchurch.org',
     contactFormName: 'Your Name',
-    contactFormEmail: 'Your Email',
+    contactFormEmail: 'Email or Phone',
     contactFormMessage: 'How can we help?',
     contactFormSubmit: 'Send Message',
     contactFormSuccess: 'Thank you \u2014 we\u2019ll be in touch soon.',

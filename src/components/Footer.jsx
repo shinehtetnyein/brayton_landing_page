@@ -20,13 +20,13 @@ const APP_DOWNLOADS = [
   {
     label: 'Google Play',
     subtitle: 'Get it on',
-    href: 'https://play.google.com/store/apps',
+    href: 'https://play.google.com/store/apps/details?id=com.microray.braytonchurch',
     kind: 'google-play',
   },
   {
     label: 'App Store',
     subtitle: 'Download on the',
-    href: 'https://www.apple.com/app-store/',
+    href: 'https://apps.apple.com/app/id6808960783',
     kind: 'app-store',
   },
 ]

@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import { MapPin, Phone, Mail, Send, CheckCircle2 } from "lucide-react";
 import { useLanguage } from "../context/LanguageContext.jsx";
+import { fetchPostContactMessage } from "../services/eventService.js";
 
 const initialForm = { name: "", email: "", message: "" };
 
@@ -9,6 +10,24 @@ export default function ContactForm() {
   const { t } = useLanguage();
   const [form, setForm] = useState(initialForm);
   const [submitted, setSubmitted] = useState(false);
+
+   // Fetch events on mount or when language context changes
+    // useEffect(() => {
+    //   let isMounted = true
+    //   async function loadPostContactMessage() {
+    //     try {
+    //       const data = await fetchPostContactMessage()
+    //       if (isMounted) setContact(data);
+    //     } catch {
+    //       // Handled gracefully inside fetchPostContactMessage
+    //     }
+    //   }
+  
+    //   loadPostContactMessage();
+    //   return () => {
+    //     isMounted = false
+    //   }
+    // }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -20,6 +39,7 @@ export default function ContactForm() {
     if (!form.name || !form.email || !form.message) return;
     setSubmitted(true);
     setForm(initialForm);
+    fetchPostContactMessage(form)
   };
 
   const infoItems = [
