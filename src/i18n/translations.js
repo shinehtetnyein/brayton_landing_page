@@ -129,10 +129,11 @@ export const translations = {
     sermon2Speaker: 'Pastor Saw Kyaw Htoo',
     sermon2Date: 'Jul 27, 2026',
     sermon3Title: 'A Table Wide Enough',
-    sermon3Ref: 'Luke 14:12\u201314',
     sermon3Speaker: 'Pastor Nay Lin',
     sermon3Date: 'Jul 20, 2026',
     sermonsCta: 'View All Sermons',
+    sermonsLatestBadge: 'Latest Service',
+    sermonsWatchOnYoutube: 'Watch on YouTube',
 
     // Scripture band
     verseText:
@@ -303,10 +304,11 @@ export const translations = {
     sermon2Speaker: 'ဆရာကြီး စောကျော်ထူး',
     sermon2Date: 'ဇူလိုင် ၂၇၊ ၂၀၂၆',
     sermon3Title: 'လုံလောက်စွာ ကျယ်ဝန်းသော စားပွဲ',
-    sermon3Ref: 'လုကာ ၁၄:၁၂-၁၄',
     sermon3Speaker: 'ဆရာ နေလင်း',
     sermon3Date: 'ဇူလိုင် ၂၀၊ ၂၀၂၆',
     sermonsCta: 'တရားဒေသနာများအားလုံး ကြည့်ရန်',
+    sermonsLatestBadge: 'နောက်ဆုံး ဝတ်ပြုခြင်း',
+    sermonsWatchOnYoutube: 'YouTube တွင် ကြည့်ရှုရန်',
 
     // Scripture band
     verseText: '\u201cလုပ်ကြိုးလျက် ဝန်လေးသောသူအပေါင်းတို့၊ ငါ့ထံသို့လာကြလော့။ ငါသည်လည်း သင်တို့ကို ချမ်းသာပေးမည်။\u201d',
